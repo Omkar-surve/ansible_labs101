@@ -1,0 +1,16 @@
+---
+- name: A reachability test.
+  hosts: [ios_routers,iosxr_routers]
+  gather_facts: no
+  vars:
+    destination: 10.10.0.5
+  
+  tasks:
+  - name: Check ping to 10.10.0.5 from IOS and IOSXR device.
+    ios_ping:
+      dest: "{{ destination }}"
+    register: data
+
+  - name: Printing ping response.
+    debug:
+      msg:  "{{ data }}"

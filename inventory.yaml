@@ -1,0 +1,29 @@
+ios_routers:
+  hosts:
+    R2:
+      ansible_host: 10.10.1.2
+iosxr_routers:
+  hosts:
+    R1:
+      ansible_host: 10.10.1.1
+cisco_switches:
+  hosts:
+    SW3:
+      ansible_host: 10.10.1.3
+    SW4:
+      ansible_host: 10.10.1.4
+vyos_network:
+  hosts:
+    vyos5:
+      ansible_host: 10.10.1.5
+
+cisco_network:
+  children:
+    ios_routers
+    iosxr_routers
+    cisco_switches
+
+network:
+  children:
+    cisco_network
+    vyos_network
