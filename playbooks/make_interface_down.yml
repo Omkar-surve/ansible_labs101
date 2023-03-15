@@ -1,0 +1,19 @@
+---
+- name: Playbook to shutdown or unshut the interfaces on multiple devices.
+#  hosts: [ios_routers,iosxr_routers,cisco_switches,vyos_network]
+  hosts: ios_routers
+  gather_facts: no
+
+  tasks:
+  - name: Shut down interface on IOS devices (Routers and switches)
+    ios_interfaces:
+      config:
+      - name: "{{ item }}"
+        description: 'Configured with Ansible'
+        enabled: True
+    with_items:
+    - GigabitEthernet0/1
+    - GigabitEthernet0/2
+
+#  - name: Shutdown interfaces on IOSXR devices (Routers)
+#  - name: Shutdown interfaces on VyOS device (Router)
