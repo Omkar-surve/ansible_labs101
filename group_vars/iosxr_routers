@@ -1,4 +1,4 @@
 ansible_network_os : iosxr
-ansible_user: cisco
+ansible_user: cisco123
 ansible_password: cisco
 ansible_connection: network_cli

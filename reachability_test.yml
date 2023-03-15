@@ -1,6 +1,6 @@
 ---
 - name: A reachability test.
-  hosts: [ios_routers,iosxr_routers]
+  hosts: [ios_routers,iosxr_routers,cisco_switches, vyos_network]
   gather_facts: no
   vars:
     destination: 10.10.0.5
@@ -10,7 +10,20 @@
     ios_ping:
       dest: "{{ destination }}"
     register: data
+    when:
+      ansible_network_os == "ios" or ansible_network_os == "iosxr"
 
-  - name: Printing ping response.
+  - name: Check ping to 10.10.0.5 from Vyos device.
+    vyos_ping:
+      dest: "{{ destination }}"
+    register: data1
+    when:
+      ansible_network_os == "vyos"
+
+  - name: Printing ping response from IOS device.
     debug:
       msg:  "{{ data }}"
+
+  - name: Printing ping response from vyos device.
+    debug:
+      msg: "{{ data1 }}"
