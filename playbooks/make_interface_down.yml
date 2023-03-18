@@ -15,5 +15,6 @@
     - GigabitEthernet0/1
     - GigabitEthernet0/2
 
-#  - name: Shutdown interfaces on IOSXR devices (Routers)
+  - name: Shutdown interfaces on IOSXR devices (Routers)
+
 #  - name: Shutdown interfaces on VyOS device (Router)
