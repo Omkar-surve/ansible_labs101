@@ -1,20 +1,61 @@
 ---
 - name: Playbook to shutdown or unshut the interfaces on multiple devices.
 #  hosts: [ios_routers,iosxr_routers,cisco_switches,vyos_network]
-  hosts: ios_routers
+  hosts: [ios_routers,iosxr_routers, vyos_network]
+#  hosts: all
   gather_facts: no
 
   tasks:
-  - name: Shut down interface on IOS devices (Routers and switches)
+  - name: Unshut interface on IOS devices (Routers and switches)
     ios_interfaces:
       config:
       - name: "{{ item }}"
         description: 'Configured with Ansible'
         enabled: True
+      state: replaced
     with_items:
     - GigabitEthernet0/1
     - GigabitEthernet0/2
+    when:
+      ansible_network_os == "ios"
 
-  - name: Shutdown interfaces on IOSXR devices (Routers)
+  - name: Unshut interfaces on IOSXR devices (Routers)
+    iosxr_interfaces:
+      config:
+      - name: "{{ item }}"
+        description: 'Configured with Ansible'
+        enabled: True
+      state: replaced
+    with_items:
+    - GigabitEthernet0/0/0/0
+    - GigabitEthernet0/0/0/1
+    when:
+      ansible_network_os == "iosxr"
 
-#  - name: Shutdown interfaces on VyOS device (Router)
+
+  - name: Unshut interfaces on VyOS device (Router) (no sub-interfaces)
+    vyos_interfaces:
+      config:
+      - name: "{{ item }}"
+        description: "Configured using Ansible"
+        enabled: True
+      state: replaced
+    with_items:
+    - eth2
+    when:
+      ansible_network_os == "vyos" and  inventory_hostname == "vyos5"
+
+  - name: Unshut and configure sub-interface on Vyos device (Router)
+    vyos_interfaces:
+      config:
+      - name: "{{ item }}"
+        description: "Configured using Ansible"
+        enabled: True
+        vifs:
+        - vlan_id: 100
+          description: "Configured sub-interface using Ansible"
+      state: replaced
+    with_items:
+    - eth3
+    when:
+      ansible_network_os == "vyos" and inventory_hostname == "vyos5"
